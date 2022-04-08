@@ -1,9 +1,12 @@
-/* resource "azurerm_public_ip" "pub_ip" {
+resource "azurerm_public_ip" "pub_ip" {
+  count               = var.public_ip ? 1 : 0
   name                = "${var.name}-pub_ip"
   location            = var.region
   resource_group_name = var.rg
-  allocation_method   = "Dynamic"
-} */
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
+
 resource "azurerm_network_interface" "nic" {
   name                = "${var.name}-nic"
   location            = var.region
@@ -13,7 +16,7 @@ resource "azurerm_network_interface" "nic" {
     name                          = "${var.name}-nic"
     subnet_id                     = var.subnet
     private_ip_address_allocation = "Dynamic"
-    #public_ip_address_id          = azurerm_public_ip.pub_ip.id
+    public_ip_address_id          = var.public_ip ? azurerm_public_ip.pub_ip[0].id : null
   }
 }
 
@@ -33,6 +36,7 @@ resource "azurerm_network_security_group" "nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+  
   security_rule {
     name                       = "HTTPS"
     priority                   = 1005
@@ -44,40 +48,44 @@ resource "azurerm_network_security_group" "nsg" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
+
   security_rule {
-    name                       = "IPERF"
+    name                       = "Internal1"
     priority                   = 1006
     direction                  = "Inbound"
     access                     = "Allow"
-    protocol                   = "TCP"
+    protocol                   = "*"
     source_port_range          = "*"
-    destination_port_range     = "5001"
-    source_address_prefix      = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "10.0.0.0/8"
     destination_address_prefix = "*"
   }
+
   security_rule {
-    name                       = "IPERF3"
+    name                       = "Internal2"
     priority                   = 1007
     direction                  = "Inbound"
     access                     = "Allow"
-    protocol                   = "TCP"
+    protocol                   = "*"
     source_port_range          = "*"
-    destination_port_range     = "5201"
-    source_address_prefix      = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "172.16.0.0/12"
     destination_address_prefix = "*"
-  }
+  }  
+
   security_rule {
-    name                       = "ICMP"
+    name                       = "Internal3"
     priority                   = 1008
     direction                  = "Inbound"
     access                     = "Allow"
-    protocol                   = "ICMP"
+    protocol                   = "*"
     source_port_range          = "*"
     destination_port_range     = "*"
-    source_address_prefix      = "*"
+    source_address_prefix      = "192.168.0.0/16"
     destination_address_prefix = "*"
   }
 }
+
 resource "azurerm_network_interface_security_group_association" "nsg" {
   network_interface_id      = azurerm_network_interface.nic.id
   network_security_group_id = azurerm_network_security_group.nsg.id
@@ -96,20 +104,23 @@ resource "azurerm_virtual_machine" "instance" {
   storage_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
+    sku       = "20.04-LTS"
     version   = "latest"
   }
+
   storage_os_disk {
     name              = "${var.name}-disk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
+
   os_profile {
     computer_name  = var.name
     admin_username = "ubuntu"
     custom_data    = var.cloud_init_data
   }
+
   os_profile_linux_config {
     disable_password_authentication = true
     ssh_keys {
@@ -117,4 +128,8 @@ resource "azurerm_virtual_machine" "instance" {
       key_data = var.ssh_key
     }
   }
+
+  depends_on = [
+    azurerm_network_interface_security_group_association.default
+  ]
 }

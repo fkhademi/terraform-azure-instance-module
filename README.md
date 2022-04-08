@@ -12,6 +12,7 @@ module "srv1" {
   vnet		= "frey"
   subnet	= "frey-Public-gateway-subnet-1"
   ssh_key	= var.ssh_key
+  public_ip = true
 }
 
 ```
@@ -34,6 +35,7 @@ key | default | value
 :---|:---|:---
 instance_size | Standard_B1ls | The size of the Azure VM instance
 cloud_init_data | | cloud init data
+public_ip | false | set to true for a pub ip
 
 ### Outputs
 This module will return the following outputs:
@@ -42,3 +44,4 @@ key | description
 :---|:---
 vm | The created VM as an object with all of it's attributes. This was created using the azurerm_virtual_machine resource.
 nic | The created NIC as an object with all of it's attributes. This was created using the azurerm_network_interface resource.
+public_ip | Public ip and its attributes
