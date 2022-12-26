@@ -34,6 +34,10 @@ variable "ubuntu_version" {
   default = "18.04-LTS"
 }
 
+variable "ubuntu_offer" {
+  default = "UbuntuServer"
+}
+
 variable "instance_size" {
   type    = string
   default = "Standard_B1ls"

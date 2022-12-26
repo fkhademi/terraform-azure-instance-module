@@ -34,7 +34,8 @@ The following variables are optional:
 key | default | value 
 :---|:---|:---
 public_ip | false | set to true for a pub ip
-ubuntu_version | 18.04-LTS | Ubuntu version to deploy (ie. 20.04-LTS, 22.10-LTS, etc)
+ubuntu_version | 18.04-LTS | Ubuntu version to deploy (ie. 20_04-LTS, 20_04-lts-gen2, 22.10-LTS, etc)
+ubuntu_offer | UbuntuServer | Ubuntu offer (ie. UbuntuServer, 0001-com-ubuntu-server-focal, etc)
 instance_size | Standard_B1ls | The size of the Azure VM instance
 cloud_init_data | | cloud init data
 

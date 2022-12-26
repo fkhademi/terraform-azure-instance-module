@@ -115,7 +115,7 @@ resource "azurerm_virtual_machine" "default" {
 
   storage_image_reference {
     publisher = "Canonical"
-    offer     = "UbuntuServer"
+    offer     = var.ubuntu_offer
     sku       = var.ubuntu_version
     version   = "latest"
   }
