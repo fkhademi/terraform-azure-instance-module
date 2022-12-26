@@ -26,6 +26,10 @@ variable "cloud_init_data" {
   default = ""
 }
 
+variable "public_ip" {
+  default = "false"
+}
+
 variable "ubuntu_version" {
   default = "18.04-LTS"
 }
