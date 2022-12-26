@@ -6,12 +6,13 @@ Generic terraform module for deploying Linux VM in Azure
 module "srv1" {
   source        = "git::https://github.com/fkhademi/terraform-azure-instance-module.git"
 
-  name		= "frey"
-  region	= "North Europe"
-  rg		= "rg-av-frey-899789"
-  vnet		= "frey"
-  subnet	= "frey-Public-gateway-subnet-1"
-  ssh_key	= var.ssh_key
+  name      = "frey"
+  region    = "North Europe"
+  rg        = "rg-av-frey-899789"
+  vnet      = "frey"
+  subnet    = "frey-Public-gateway-subnet-1"
+  ssh_key   = var.ssh_key
+  public_ip = true
 }
 
 ```
@@ -32,6 +33,8 @@ The following variables are optional:
 
 key | default | value 
 :---|:---|:---
+public_ip | false | set to true for a pub ip
+ubuntu_version | 18.04-LTS | Ubuntu version to deploy (ie. 20.04-LTS, 22.10-LTS, etc)
 instance_size | Standard_B1ls | The size of the Azure VM instance
 cloud_init_data | | cloud init data
 

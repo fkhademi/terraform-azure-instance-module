@@ -25,6 +25,11 @@ variable "ssh_key" {
 variable "cloud_init_data" {
   default = ""
 }
+
+variable "ubuntu_version" {
+  default = "18.04-LTS"
+}
+
 variable "instance_size" {
   type    = string
   default = "Standard_B1ls"
