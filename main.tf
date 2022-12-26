@@ -50,6 +50,18 @@ resource "azurerm_network_security_group" "default" {
   }
 
   security_rule {
+    name                       = "geneve"
+    priority                   = 1010
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "6081"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
     name                       = "Internal1"
     priority                   = 1006
     direction                  = "Inbound"
