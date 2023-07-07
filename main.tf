@@ -36,7 +36,7 @@ resource "azurerm_network_security_group" "default" {
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
-  
+
   security_rule {
     name                       = "HTTPS"
     priority                   = 1005
@@ -83,7 +83,7 @@ resource "azurerm_network_security_group" "default" {
     destination_port_range     = "*"
     source_address_prefix      = "172.16.0.0/12"
     destination_address_prefix = "*"
-  }  
+  }
 
   security_rule {
     name                       = "Internal3"
@@ -96,7 +96,7 @@ resource "azurerm_network_security_group" "default" {
     source_address_prefix      = "192.168.0.0/16"
     destination_address_prefix = "*"
   }
-  
+
   security_rule {
     name                       = "Outbound"
     priority                   = 1009
@@ -115,6 +115,44 @@ resource "azurerm_network_interface_security_group_association" "default" {
   network_security_group_id = azurerm_network_security_group.default.id
 }
 
+# LAN Interface
+resource "azurerm_network_interface" "lan" {
+  name                 = "${var.name}-lan-nic"
+  location             = var.region
+  resource_group_name  = var.rg
+  enable_ip_forwarding = true
+
+  ip_configuration {
+    name                          = "${var.name}-lan-nic"
+    subnet_id                     = var.lan_subnet
+    private_ip_address_allocation = "Dynamic"
+  }
+}
+
+resource "azurerm_network_security_group" "lan_nsg" {
+  name                = "${var.name}-lan-nsg"
+  location            = var.region
+  resource_group_name = var.rg
+
+  security_rule {
+    name                       = "All"
+    priority                   = 1004
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_network_interface_security_group_association" "lan_nsg" {
+  network_interface_id      = azurerm_network_interface.lan.id
+  network_security_group_id = azurerm_network_security_group.lan_nsg.id
+}
+
+# Virtual Machine
 resource "azurerm_virtual_machine" "default" {
   name                  = "${var.name}-srv"
   location              = var.region

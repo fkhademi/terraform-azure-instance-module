@@ -27,6 +27,7 @@ region | Azure region
 rg | Resource Group where resources should be deployed
 vnet | VNET name
 subnet | Subnet name where VM should be attached
+lan_subnet | LAN Subnet name to use
 ssh_key | Public key to be used
 
 The following variables are optional:
