@@ -46,3 +46,4 @@ key | description
 :---|:---
 vm | The created VM as an object with all of it's attributes. This was created using the azurerm_virtual_machine resource.
 nic | The created NIC as an object with all of it's attributes. This was created using the azurerm_network_interface resource.
+public_ip | The created Public IP as an object with all of it's attributes.
