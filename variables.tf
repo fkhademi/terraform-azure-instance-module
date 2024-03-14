@@ -18,8 +18,20 @@ variable "subnet" {
   type = string
 }
 
+variable "azure_additional_nic" {
+  default = []
+}
+
 variable "ssh_key" {
   type = string
+}
+
+variable "inbound_tcp" {
+  description = "Inbound TCP Ports"
+}
+
+variable "inbound_udp" {
+  description = "Inbound UDP Ports"
 }
 
 variable "cloud_init_data" {
