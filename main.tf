@@ -189,11 +189,12 @@ resource "azurerm_network_security_rule" "this_inbound_udp" {
 # }
 
 resource "azurerm_virtual_machine" "this" {
-  name                  = var.name
-  location              = var.region
-  resource_group_name   = var.rg
-  network_interface_ids = concat([azurerm_network_interface.this.id], var.azure_additional_nic)
-  vm_size               = var.instance_size
+  name                         = var.name
+  location                     = var.region
+  resource_group_name          = var.rg
+  network_interface_ids        = concat([azurerm_network_interface.this.id], var.azure_additional_nic)
+  primary_network_interface_id = azurerm_network_interface.this.id
+  vm_size                      = var.instance_size
 
   delete_os_disk_on_termination    = true
   delete_data_disks_on_termination = true
